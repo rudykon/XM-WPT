@@ -95,7 +95,7 @@ def _efficiency_plot(plt, study):
     )
     axes[0].axhline(
         target / complete_capture_eta, color="#555555", ls=":",
-        label="全部截获的能量下界",
+        label="全部截获时的馈入功率下界",
     )
     axes[0].set(
         xlabel="发射口径边长 / cm", ylabel=f"实现 {target:g} W 的射频馈入 / W",
