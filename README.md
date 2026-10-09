@@ -15,8 +15,10 @@
 - [研究场景与方法](#研究场景与方法)
 - [关键结果与配图](#关键结果与配图)
 - [复现方法](#复现方法)
+- [命令一览](#命令一览)
 - [代码与数据](#代码与数据)
 - [模型边界与后续工作](#模型边界与后续工作)
+- [历史清理](#历史清理)
 
 ## 研究场景与方法
 
@@ -114,32 +116,37 @@ $$
 
 ## 复现方法
 
-需要 **Python 3.12+**。在仓库根目录执行，不需要进入额外的仿真目录。
+需要 **Python 3.12+**。以下命令均在本 README、`run.py` 和 `requirements.txt` 所在的**项目根目录**执行。
 
-```bash
-git clone https://github.com/rudykon/XM-WPT.git
-cd XM-WPT
+代码仓库：[rudykon/XM-WPT](https://github.com/rudykon/XM-WPT)。若从仓库获取代码，以包含 `run.py` 和 `requirements.txt` 的目录为运行目录。
+
+建议使用独立虚拟环境。Windows PowerShell 可直接指定环境中的解释器：
+
+```powershell
 python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python run.py --help
+.venv\Scripts\python run.py test
 ```
 
-激活环境：Windows PowerShell 使用 `.venv\Scripts\Activate.ps1`；macOS/Linux 使用 `source .venv/bin/activate`。随后执行：
+下文的 `python` 指已安装依赖的解释器。可先激活环境：Windows PowerShell 使用 `.venv\Scripts\Activate.ps1`；macOS/Linux 使用 `source .venv/bin/activate`，安装依赖使用 `python -m pip install -r requirements.txt`。
 
-```bash
-python -m pip install -r requirements.txt
-python run.py test
-python run.py --help
-```
+本机保留 `.deps/` 作为现有运行环境的后备，只由 `run.py` 统一加载；虚拟环境优先使用自己安装的依赖。依赖库不进入交付包。
 
-**使用已有结果重画图，无需重新优化：**
+### 使用已有结果分析或重画图
+
+已有结果保存在 `results/focused_aperture/`，无需重新优化：
 
 ```bash
 python run.py analyze
 python run.py plot
 ```
 
-`analyze` 重新写入两份派生分析 JSON；`plot` 只绘图，不修改数值结果。图片默认生成到 `文档/小米隔空充电_技术方案.assets/`。README 图片位于 `assets/figures/`，是文章配图快照，二者不会自动同步。中文字体缺失时可安装 Noto Sans CJK SC 或思源黑体。
+`analyze` 重新写入两份派生分析 JSON；`plot` 只绘图，不修改数值结果。GitHub 版本的图片默认生成到 **`文档/小米隔空充电_技术方案.assets/`**；本地旧版路径配置仍可能使用上一级的 `../文档/`，以 [wpt/paths.py](wpt/paths.py) 中的 `DOCUMENTS_DIR` 为准。本 README 使用 [assets/figures/](assets/figures/) 中的四张文章配图快照，二者不会自动同步。中文字体缺失时可安装 Noto Sans CJK SC 或思源黑体。
 
-**从头重新计算：**
+### 从头重新计算
+
+仅复现数值与图片：
 
 ```bash
 python run.py simulate
@@ -148,39 +155,107 @@ python run.py analyze
 python run.py plot
 ```
 
-这会覆盖对应生成结果。主网格为 1024²，数值核查使用 2048²，需要较充足内存。参数入口为 [wpt/config.py](wpt/config.py)；结果中的 `config.json` 是快照，不是程序输入。修改参数后应重新生成一致的数据，不要把旧场分布与新效率混用。
+**仅本地完整项目：**补齐报告模板后，可完整计算并生成 LaTeX 报告。GitHub 仓库未包含模板，克隆后请使用上面的四步数值流程。
 
-仓库保留报告相关 Python 源码，**没有上传完整文章、LaTeX 源文档或模板**。因此 `report`、`pdf`、`package` 及包含报告阶段的 `all` 命令需要本地完整项目；本仓库使用上面的四步流程复现数值与图片。
+```bash
+python run.py all
+```
+
+`all` 依次运行基准扫描、相位优化、后处理、四张图片和 LaTeX 报告生成；加上 `--pdf` 才会编译 PDF，且不会自动打包。上述计算和生成命令**会覆盖对应生成文件**。主网格为 1024²，数值核查使用 2048²，完整计算通常需要数分钟及较充足内存。
+
+参数入口为 [wpt/config.py](wpt/config.py)。修改参数后应从 `simulate` 重新开始，重新生成一致的数据；结果中的 `config.json` 是快照，不是程序输入，不能把旧场分布与新效率混用。
+
+### 报告与交付物
+
+GitHub 仓库保留报告相关 Python 源码，**不包含完整文章、LaTeX 源文档、模板或完整交付包**。`report`、`pdf`、`package` 及包含报告阶段的 `all` 需要本地完整项目。下列文件位置仅说明本地保留的材料，不是仓库内的下载入口：
+
+- 原生模板：`wpt/templates/report.tex`
+- LaTeX 报告：`paper/小米隔空充电_技术方案.tex`
+- PDF 报告：`paper/小米隔空充电_技术方案_最新版.pdf`
+- LaTeX 编译说明：`paper/LaTeX编译说明.txt`
+- 仿真与 LaTeX 完整包：`paper/小米隔空充电_仿真与LaTeX完整包.zip`
+
+**现有文件位置与代码默认输出位置不同。**`plot`、`report`、`pdf`、`package` 使用 `DOCUMENTS_DIR`：GitHub 版本为项目内的 `文档/`，本地旧版配置为上一级的 `../文档/`，均不会自动更新 `paper/` 中的文件。
+
+在本地完整项目的已有结果上重新生成交付物，可依次运行 `analyze`、`plot`、`report`、`pdf`、`package`。PDF 编译需要本机安装 XeLaTeX、ctex 和 Fandol 字体。打包还要求默认输出目录中有 `LaTeX编译说明.txt`；重新打包前需将本地 `paper/` 中的说明复制到 `DOCUMENTS_DIR`。项目不再提供 Word 或 Markdown 报告生成流程。
+
+`package` 按白名单收集代码、结果和默认文档目录中的报告及四幅报告图，不包含 `assets/figures/` 和 `paper/`。解压新生成的包后，应从包内 `文档/` 查看报告；本 README 的配图快照不随该包带入。
+
+## 命令一览
+
+`simulate`、`optimize`、`analyze`、`plot`、`test` 可用公开仓库复现；`report`、`pdf`、`package`、`all` 和 `all --pdf` 需要上述本地完整项目材料。
+
+| 命令 | 用途 | 输入和输出 |
+|---|---|---|
+| `python run.py simulate` | 几何调相与连续口径的基准扫描、距离和网格核查 | 配置 → `summary.json`、配置快照及基准 CSV |
+| `python run.py optimize` | 固定通道数的相位局部优化与 6 bit 量化 | 基准结果 → 优化 JSON/CSV、选定口径场数据 |
+| `python run.py analyze` | 公众点 E/H 筛查和定位误差分析 | 已保存的场 → 两份派生 JSON |
+| `python run.py plot` | 生成适合 A4 排版的四幅图 | 已保存的结果 → 四张 PNG；不修改数值数据 |
+| `python run.py report` | 直接生成 LaTeX 报告 | 数值结果 + 原生 `.tex` 模板 → `.tex` 报告 |
+| `python run.py pdf` | 连续编译两次并更新 PDF | 需要本机 XeLaTeX、ctex、Fandol 及已生成图片 |
+| `python run.py package` | 校验并打包维护中的代码、结果和文档 | 不打包缓存、第三方库和历史归档；PDF 必须与 LaTeX 同步 |
+| `python run.py test` | 检查数值算法与保存结果的一致性 | 不覆盖正式仿真结果 |
+| `python run.py all` | 完整计算、后处理、绘图及 LaTeX 报告生成 | 不编译 PDF，不自动打包 |
+| `python run.py all --pdf` | 完整计算、报告生成及 PDF 编译 | 包含 `all` 的全部阶段；不自动打包 |
 
 ## 代码与数据
 
 ```text
 XM-WPT/
-├── run.py                 # 命令入口
-├── requirements.txt       # 固定依赖版本
-├── wpt/                   # 模型、优化、后处理与绘图
-├── tests/                 # 数值一致性检查
+├── README.md                  # 研究摘要、关键图表与运行说明
+├── run.py                     # 唯一命令入口和本机依赖兼容
+├── requirements.txt           # 固定依赖版本
+├── wpt/
+│   ├── config.py              # 物理参数、效率和扫描设置
+│   ├── paths.py               # 数据、文档、缓存路径
+│   ├── model.py               # 矢量角谱传播与接收面积积分
+│   ├── optimization.py        # 相位目标、伴随梯度与局部搜索
+│   ├── simulation.py          # 基准/优化扫描及结果保存
+│   ├── analysis.py            # 从保存场派生筛查与定位敏感性
+│   ├── plots.py               # 四幅图的绘制
+│   ├── report.py              # 报告生成源码，模板仅在本地保留
+│   ├── publishing.py          # PDF 编译与完整包校验
+│   └── cli.py                 # 命令分派
+├── tests/                     # 功率守恒、梯度和结果回归
 ├── results/focused_aperture/
-│   ├── *.json             # 配置、汇总、筛查与敏感性结果
-│   ├── *.csv              # 口径、功率、距离与数值核查
-│   └── *.npz              # 20 cm、30 cm 优化候选的场快照
-└── assets/figures/         # 本 README 的四张文章配图
+│   ├── *.json                 # 配置、汇总、筛查与敏感性结果
+│   ├── *.csv                  # 口径、功率、距离与数值核查
+│   └── *.npz                  # 20 cm、30 cm 优化候选的场快照
+└── assets/figures/             # 本 README 的四张文章配图
 ```
+
+运行相关命令后会生成 `DOCUMENTS_DIR` 指定的文档目录。`paper/`、`wpt/templates/report.tex` 和接收面积说明 `docs/receiver_assumptions.md` 仅在本地完整项目保留。`.cache/` 保存可再生的字体缓存、编译日志等临时文件；`.deps/`、`.venv/` 是本地依赖环境。
 
 | 想查看的内容 | 文件 |
 |---|---|
 | 传播模型与固定接收面积积分 | [model.py](wpt/model.py) |
 | 相位目标、伴随梯度与局部搜索 | [optimization.py](wpt/optimization.py) |
+| 手机接收面积的假设依据 | 本文“固定手机，调整发射端”；本地另有 `docs/receiver_assumptions.md` |
 | 11 个优化候选、迭代记录及相位 | [optimized_summary.json](results/focused_aperture/optimized_summary.json) |
 | 口径与功率扫描 | [口径扫描](results/focused_aperture/optimized_aperture_scan.csv)、[功率扫描](results/focused_aperture/optimized_power_scan.csv) |
 | 选定路径与侧向点的 E/H | [public_point_screening.json](results/focused_aperture/public_point_screening.json) |
 
 现有 5 项测试覆盖功率守恒与切片一致性、伴随梯度、通道数与公共相位不变性、保存的 30 cm 结果及派生分析。它们支持数值实现的一致性，不等于真实硬件精度已获验证。
 
+### 数据约定
+
+- 参数源为 `wpt/config.py`。`results/focused_aperture/config.json` 是运行快照；绘图和后处理读取结果内的配置，避免把旧场数据套入新效率。
+- 功率单位为 W，距离为 m，面积由宽、高相乘；CSV 中的效率和捕获率为 0—1 比例，显示百分数时乘 100。
+- 场在源端归一化为 1 W 前向辐射功率，传播时不重新归一化；积分保留有符号法向 Poynting 通量。
+- 相位约定为 exp(−iωt)，传播为 exp(+ikz·z)。接收面积已经计入积分，不再额外乘接收天线增益。
+
 ## 模型边界与后续工作
 
 当前是等效口径的前向矢量传播模型，未模拟真实天线结构互耦、源附近倏逝场、接收结构加载反作用、室内和人体散射，也未模拟整流非线性、热退化、遮挡及动态控制。主优化目标是收能，**没有把公众可达点的 E/H 限制加入相位优化约束**。
 
+报告模板针对本文 60 GHz、50 cm²、3 m、5 W 场景。探索其他配置时，数值模块可按配置计算，但须同步核查报告叙述、表格和标题，不能把默认报告直接当成任意参数的通用报告。
+
 后续值得验证的方向包括：测量实际子口径方向图和相位控制能力；用整流曲线与温升替代固定效率；在真实三维公众可达空间内做约束优化；用多起点、更多口径采样及离散相位搜索检查结果的稳健性。
 
-这里保留研究摘要、关键图表和复现入口，完整推导与全文报告不放入仓库。
+本 README 汇总研究摘要、关键图表与复现入口，完整推导与排版报告仅保留于本地 `paper/`，不放入公开仓库。
+
+## 历史清理
+
+原运行说明记录：2026-10-09 已将旧的小口径仿真、Word 生成链、旧结果与历史备份归入 `../归档/仿真代码整理前_*.zip`；旧报告另存于 `../归档/报告切换LaTeX前_*.zip`，均附 SHA-256 清单。旧入口和不再使用的报告移出工作目录，当前数值结果保留。**当前项目目录未包含上述归档目录**，这些路径仅作为历史记录保留。
+
+阅读归档中的脚本名时，对应关系如下：`focused_aperture.py` → `simulate`；`optimize_focused_phase.py` → `optimize`；`plot_focused_aperture.py` → `analyze` + `plot`；两步旧报告生成流程已由 `report` 替代；`package_focused_report.py` → `package`。
