@@ -3,7 +3,7 @@
 from pathlib import Path
 
 SIMULATION_DIR = Path(__file__).resolve().parents[1]
-PROJECT_DIR = SIMULATION_DIR.parent
+PROJECT_DIR = SIMULATION_DIR
 RESULTS_DIR = SIMULATION_DIR / "results" / "focused_aperture"
 CACHE_DIR = SIMULATION_DIR / ".cache"
 DOCUMENTS_DIR = PROJECT_DIR / "文档"

@@ -6,10 +6,9 @@
 
 ## 快速开始
 
-需要 Python 3.12+。先进入 `仿真/`，安装依赖并验证保存结果：
+需要 Python 3.12+。在仓库根目录安装依赖并验证保存结果：
 
 ```powershell
-cd 仿真
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 .venv\Scripts\python run.py test
@@ -34,14 +33,14 @@ python run.py analyze
 python run.py plot
 ```
 
-参数设置位于 `仿真/wpt/config.py`；已有结果的参数快照位于 `仿真/results/focused_aperture/config.json`，后者不是程序输入。修改参数后应重新计算，不能混用不同配置的结果。
+参数设置位于 `wpt/config.py`；已有结果的参数快照位于 `results/focused_aperture/config.json`，后者不是程序输入。修改参数后应重新计算，不能混用不同配置的结果。
 
 ## 仓库内容
 
-- `仿真/wpt/`：物理模型、优化、分析、绘图与报告生成相关 Python 源码。
-- `仿真/tests/`：功率守恒、伴随梯度与保存结果回归检查。
-- `仿真/results/focused_aperture/`：复现分析和绘图所需的 13 个结果快照文件。
+- `wpt/`：物理模型、优化、分析、绘图与报告生成相关 Python 源码。
+- `tests/`：功率守恒、伴随梯度与保存结果回归检查。
+- `results/focused_aperture/`：复现分析和绘图所需的 13 个结果快照文件。
 
 保存的默认结果中，30 cm 口径候选需要约 **48.5 W 射频馈入、159 W 墙插输入，墙插效率约 3.15%**。这是有限口径采样与局部优化的结果，不是全局最优；所需场强超过本文设置的公众环境筛查值，不能据此认定开放房间或手持使用可行。
 
-请保留 `仿真/` 目录层级。凭据、本地依赖、缓存、历史归档、LaTeX 模板与报告均未上传。报告相关 Python 源码保留，但 `report`、`pdf`、`package` 及包含报告阶段的 `all` 命令需要原本地项目中的 LaTeX 文件；本仓库的复现流程使用上面列出的四个命令。
+凭据、本地依赖、缓存、历史归档、LaTeX 模板与报告均未上传。报告相关 Python 源码保留，但 `report`、`pdf`、`package` 及包含报告阶段的 `all` 命令需要原本地项目中的 LaTeX 文件；本仓库的复现流程使用上面列出的四个命令。
