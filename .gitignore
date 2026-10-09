@@ -1,0 +1,26 @@
+# Credentials and machine-specific configuration
+github_token.json
+*token*.json
+.env
+.env.*
+*.pem
+*.key
+
+# Local dependencies and reproducible caches
+.deps/
+.venv/
+.cache/
+__pycache__/
+*.py[cod]
+
+# Historical archives and generated reports
+/归档/
+/文档/
+*.zip
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
