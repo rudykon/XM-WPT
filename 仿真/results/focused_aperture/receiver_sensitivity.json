@@ -1,0 +1,31 @@
+{
+  "fixed_best_rf_feed_w": 48.504123602855984,
+  "position_errors_x": [
+    {
+      "lateral_error_m": 0,
+      "load_w": 5.000000000000035
+    },
+    {
+      "lateral_error_m": 0.005,
+      "load_w": 4.903019376146057
+    },
+    {
+      "lateral_error_m": 0.01,
+      "load_w": 4.607507270358545
+    },
+    {
+      "lateral_error_m": 0.02,
+      "load_w": 3.5813712511659546
+    },
+    {
+      "lateral_error_m": 0.03,
+      "load_w": 2.3125367505324825
+    },
+    {
+      "lateral_error_m": 0.05,
+      "load_w": 0.5238108447191103
+    }
+  ],
+  "same_beam_98cm2_load_w": 5.809469458119356,
+  "same_beam_98cm2_rf_feed_for_5w_w": 41.74574283634995
+}
